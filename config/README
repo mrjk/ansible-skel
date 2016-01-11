@@ -1,4 +1,0 @@
-# To initalize your role and download dependencies:
-
-project/config$ ansible-playbook init_ansible.yml 
-
