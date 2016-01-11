@@ -1,7 +1,0 @@
-
-
-# Forward requests to web1
-if ( req.http.host ~ "client1\.sites\.test" ) {
-	set req.backend_hint = web1;
-	return (pass);
-}

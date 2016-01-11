@@ -1,3 +1,0 @@
----
-
-sysadmin_pkgs: "{{ sysadmin_centos_pkgs }}"

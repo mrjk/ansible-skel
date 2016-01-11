@@ -1,6 +1,0 @@
----
-# defaults file for simplewebserv
-
-simplewebserv_port: 8000
-simplewebserv_root: /var/www/default
-
