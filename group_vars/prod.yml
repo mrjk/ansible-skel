@@ -1,0 +1,8 @@
+---
+client_to_manage:
+- sfl
+- client1
+- client2
+- client3
+
+arch_debug: False

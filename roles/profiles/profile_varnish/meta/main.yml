@@ -1,0 +1,42 @@
+---
+dependencies:
+
+- role: simplewebserv
+  simplewebserv_port: 8000
+  simplewebserv_root: /var/www/default
+  tags:
+  - simplewebserv
+
+
+- role: varnish4-base
+  tags:
+  - varnish
+
+  varnish4_port: 80
+  varnish4_listen: "{{ ansible_ssh_host }}"
+  varnish4_acl_debug:
+  - 127.0.0.1
+  - 192.168.50.229
+  - 10.0.42.1
+  varnish4_backends:
+    default:
+      type: backend
+      host: 127.0.0.1
+      port: 8000
+    web1:
+      type: backend
+      host: 10.0.42.21
+      probe: /index.html
+      port: 80
+    web2:
+      type: backend
+      host: 10.0.42.22
+      probe: /index.html
+      port: 80
+    web:
+      type: director
+      backends:
+      - web1
+      - web2
+  varnish4_recv_files: "{{ client_to_manage }}"
+

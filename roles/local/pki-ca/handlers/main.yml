@@ -1,0 +1,36 @@
+---
+# handlers file for pki-ca
+
+# CA handlers
+- name: root - clean ca
+  shell: "rm {{pki_ca_dir}}/{{ pki_ca_root_name }}.crt || exit 0; rm {{pki_ca_dir}}/{{ pki_ca_root_name }}.csr || exit 0"
+
+- name: root - clean certs
+  shell: "rm {{pki_ca_dir}}/certs/{{ item.name }}.* || exit 0 ; rm {{pki_ca_dir}}/out/{{ item.name }}.* || exit 0 "
+  with_items: pki_ca_certs
+
+- name: root - selfsign cert
+  shell: "openssl req -x509 -new -nodes -key {{pki_ca_dir}}/{{ pki_ca_root_name }}.key -days 1024 -out {{pki_ca_dir}}/{{ pki_ca_root_name }}.pem -subj '{{ pki_ca_subj }}'"
+  notify:
+  - root - install CA locally
+
+- name: root - install CA locally
+  shell: "cp {{pki_ca_dir}}/{{ pki_ca_root_name }}.pem /etc/pki/ca-trust/source/anchors/"
+  when: pki_ca_local_install and ansible_os_family == "RedHat"
+  notify:
+  - update system CA
+
+- name: update system CA
+  shell: update-ca-trust extract
+
+# Generate end users certificates
+- name: client - pound
+  shell: "cat {{pki_ca_dir}}/certs/{{ item.name }}.crt {{pki_ca_dir}}/certs/{{ item.name }}.key {{pki_ca_dir}}/certs/{{ item.name }}.crt > {{pki_ca_dir}}/out/{{ item.name }}_pound.pem"
+  with_items: pki_ca_certs
+    
+- name: client - haproxy
+  shell: "cat {{pki_ca_dir}}/certs/{{ item.name }}.crt {{pki_ca_dir}}/certs/{{ item.name }}.crt {{pki_ca_dir}}/certs/{{ item.name }}.key > {{pki_ca_dir}}/out/{{ item.name }}_haproxy.pem"
+  with_items: pki_ca_certs
+    
+
+

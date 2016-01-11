@@ -1,0 +1,80 @@
+
+# LVS configuration: {{ keepalived_lvs_name }}
+################################################
+
+
+virtual_server {{ keepalived_lvs_ip }} {{ keepalived_lvs_port }} {
+	
+	# Virtual server definition
+	lb_algo		{{ keepalived_lvs_algo }}
+	lb_kind		{{ keepalived_lvs_kind }}
+	net_mask	{{ keepalived_lvs_netmask }}
+	protocol	{{ keepalived_lvs_protocol }}
+
+	{% if keepalived_lvs_sorry is defined %}# Sorry Server	
+	sorry_server	{{ keepalived_lvs_sorry.ip }}	{{ keepalived_lvs_sorry.port }}
+	{% endif %}
+	
+	# Real Server definitions
+{% for i in keepalived_lvs_rs %}
+real_server	{{ i.ip }}	{{ i.port }}	{
+	weight		{{ i.weight|default('1') }}	
+
+	notify_up	"/usr/local/bin/keepalived_notify REAL_SERVER {{ i.ip }} {{ i.port }} UP {{ keepalived_lvs_name }}"
+	notify_down	"/usr/local/bin/keepalived_notify REAL_SERVER {{ i.ip }} {{ i.port }} DOWN {{ keepalived_lvs_name }}"
+
+{% if i.checks is defined%}{% for j in i.checks%}
+	{% if j.type == 'http' %}
+	# HTTP Check
+	HTTP_GET {
+		url {
+			path		{{ j.path|default('/') }}
+			status_code	{{ j.status_code|default('200') }}
+		}	
+
+		connect_ip		{{ i.connect_ip|default(i.ip) }}
+		connect_port		{{ i.connect_port|default(i.port) }}
+		connect_timeout		{{ j.connect_timeout|default('2') }}
+
+		bindto			{{ j.bindto|default(ansible_ssh_host) }}
+		nb_get_retry		{{ j.nb_get_retry|default('2') }}
+		delay_before_retry	{{ j.delay_before_retry|default('5') }}
+	}
+	{% elif j.type == 'https' %}
+	# HTTPS Check
+	SSL_GET {
+		url {
+			path		{{ j.path|default('/') }}
+			status_code	{{ j.status_code|default('200') }}
+		}	
+
+		connect_ip		{{ i.connect_ip|default(i.ip) }}
+		connect_port		{{ i.connect_port|default(i.port) }}
+		connect_timeout		{{ j.connect_timeout|default('2') }}
+
+		bindto			{{ j.bindto|default(ansible_ssh_host) }}
+		nb_get_retry		{{ j.nb_get_retry|default('2') }}
+		delay_before_retry	{{ j.delay_before_retry|default('5') }}
+	}
+	{% elif j.type == 'tcp' %}
+	# TCP Check
+	TCP_CHECK {
+		connect_ip		{{ i.connect_ip|default(i.ip) }}
+		connect_port		{{ i.connect_port|default(i.port) }}
+		connect_timeout		{{ j.connect_timeout|default('2') }}
+
+		bindto			{{ j.bindto|default(ansible_ssh_host) }}
+		nb_get_retry		{{ j.nb_get_retry|default('2') }}
+		delay_before_retry	{{ j.delay_before_retry|default('5') }}
+	}
+	{% elif j.type == 'misc' %}
+	# Script check
+	MISC_CHECK {
+		# not implemted yet
+	}
+	{% endif %}
+	
+{% endfor %}{% endif%}
+}
+{% endfor%}
+

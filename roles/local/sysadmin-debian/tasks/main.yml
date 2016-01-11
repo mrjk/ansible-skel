@@ -1,0 +1,49 @@
+---
+
+
+# Include OS variables
+- name: include os variables
+  include_vars: "{{ item }}"
+  with_first_found:
+  - "{{ ansible_distribution|lower }}-{{ ansible_distribution_major_version }}.yml"
+  - "{{ ansible_distribution|lower }}.yml"
+  - default.yml
+
+
+
+# Debian: Update the whole system
+- name: update the system (apt)
+  apt: name=* update_cache=yes upgrade=full 
+  when: ansible_distribution == 'Debian' and sysadmin_sysupdate 
+
+
+# Centos: Update the whole system
+- name: update the system (yum)
+  yum: name=* state=latest
+  ignore_errors: yes
+  when: ansible_distribution == 'CentOS' and sysadmin_sysupdate
+
+
+# Centos: For RHEL7 only
+- name: install epel (yum)
+  yum: name=epel-release state=present
+  when: ansible_distribution == 'CentOS'
+
+
+# Configure a nice shell prompt
+- name: install sysadmin bashrc
+  get_url:
+    dest: /root/.bashrc
+    force: yes
+    url: https://raw.githubusercontent.com/mrjk/linux-personal-env/master/bash/bash.bashrc
+    validate_certs: yes
+  ignore_errors: yes
+
+
+# Install sysadmin packages
+- name: install sysadmin tools
+  action: "{{ ansible_pkg_mgr }} name={{ item }} state=installed"
+  with_items: sysadmin_pkgs
+
+
+

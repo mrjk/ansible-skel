@@ -1,0 +1,27 @@
+
+
+# Forward requests to pool
+#if ( req.http.host ~ "sites\.test" ) {
+#	set req.backend_hint = web.backend();
+#	return (pass);
+#}
+
+# Go to web1 backend
+if ( req.http.host ~ "^web1.proxy.\.sfl\.test" ) {
+	set req.backend_hint = web1;
+	return (pass);
+}
+
+# Go to web2 backend
+if ( req.http.host ~ "^web2.proxy.\.sfl\.test" ) {
+	set req.backend_hint = web2;
+	return (pass);
+}
+
+# Go to default backend
+if ( req.http.host ~ "^proxy.\.sfl\.test" ) {
+	set req.backend_hint = default;
+	return (pass);
+}
+
+

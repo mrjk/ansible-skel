@@ -1,0 +1,11 @@
+---
+
+ansible_vendors:
+  dumpall:
+    type: ansible_galaxy
+    source: mrjk.dumpall 
+  nginx:
+    type: git_clone
+    source: https://github.com/f500/ansible-nginx
+
+

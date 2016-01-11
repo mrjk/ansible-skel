@@ -1,0 +1,70 @@
+---
+
+# Include OS variables
+- name: include os variables
+  include_vars: "{{ item }}"
+  with_first_found:
+  - "{{ ansible_distribution|lower }}-{{ ansible_distribution_major_version }}.yml"
+  - "{{ ansible_distribution|lower }}.yml"
+  - default.yml
+
+# Install pound
+- name: install pound
+  yum: name=Pound state=present
+  notify:
+  - clean default pound configuration
+
+- meta: flush_handlers
+
+
+# Configuration
+- name: create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ pound_default_conf_dir }}"
+    - "{{ pound_default_conf_dir }}/cert"
+
+- name: push main configuration
+  template:
+    dest: "{{ pound_default_conf_file }}"
+    src: "pound.cfg.j2"
+    force: no
+  notify:
+  - restart pound
+
+- name: push default configuration
+  template:
+    dest="{{ pound_default_conf_dir }}/default.cfg"
+    src="default.cfg.j2"
+  notify:
+  - restart pound
+
+#- debug: msg="openssl req -x509 -newkey rsa:1024 -keyout {{ pound_default_conf_dir }}/cert/default.pem -out {{ pound_default_conf_dir }}/cert/default.pem -days 365 -nodes -subj '{{ pound_self_signed_subj }}'"
+
+# Create default self-signed certificate
+- name: create default self-signed certificate
+  shell: "openssl req -x509 -newkey rsa:1024 -keyout {{ pound_default_conf_dir }}/cert/default.pem -out {{ pound_default_conf_dir }}/cert/default.pem -days 365 -nodes -subj '{{ pound_self_signed_subj }}'"
+  args:
+    create: "{{ pound_default_conf_dir }}/cert/default.pem"
+  when: pound_self_signed_cert
+  notify:
+  - restart pound
+
+- name: import certificates
+  copy:
+    src: "{{ pound_local_cert_dir }}/{{ item }}_pound.pem"
+    dest: "{{ pound_default_conf_dir }}/cert/{{ item }}.pem"
+  with_items: pound_local_cert_list
+  notify:
+  - restart pound
+
+
+# Start daemon
+- name: start pound
+  service: 
+    name: pound 
+    state: started
+    enabled: yes
+

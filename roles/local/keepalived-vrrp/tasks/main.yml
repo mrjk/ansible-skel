@@ -1,0 +1,24 @@
+---
+
+- name: Check ansible config for keepalived
+  assert:
+    that:
+    - "keepalived_vrrp_name is defined"
+    - "keepalived_vrrp_virtual_router_id is defined and keepalived_vrrp_virtual_router_id|int"
+    - "keepalived_vrrp_state == 'master' or keepalived_vrrp_state == 'backup'"
+    - "keepalived_vrrp_ip|ipaddr"
+    - "keepalived_vrrp_netmask is defined and keepalived_vrrp_netmask|int"
+
+- name: Copy check script
+  copy: 
+    src: "{{ keepalived_vrrp_check_script_template }}"
+    dest: "{{ keepalived_vrrp_check_script }}"
+    mode: "u=rwx,g=rx,o=rx"
+  when: keepalived_vrrp_check_script_template is defined
+
+- name: Configure keepalived vrrp
+  template:
+    src: vrrp.conf.j2
+    dest: "/etc/keepalived/conf.d/{{ keepalived_vrrp_name }}.conf"
+  notify: Reload keepalived
+

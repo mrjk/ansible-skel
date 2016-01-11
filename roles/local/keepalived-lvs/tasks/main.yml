@@ -1,0 +1,23 @@
+---
+
+- name: Check ansible config for keepalived
+  assert:
+    that:
+    - "keepalived_lvs_name is defined"
+    - "keepalived_lvs_ip|ipaddr"
+    - "keepalived_lvs_netmask is defined and keepalived_lvs_netmask|int"
+    - "keepalived_lvs_port is defined and keepalived_lvs_port|int"
+
+- name: Copy check script
+  copy: 
+    src: "{{ keepalived_lvs_check_script_template }}"
+    dest: "{{ keepalived_lvs_check_script }}"
+    mode: "u=rwx,g=rx,o=rx"
+  when: keepalived_lvs_check_script_template is defined
+
+- name: Configure keepalived lvs
+  template:
+    src: lvs.conf.j2
+    dest: "/etc/keepalived/conf.d/{{ keepalived_lvs_name }}.conf"
+  notify: Reload keepalived
+

@@ -1,0 +1,17 @@
+---
+
+- hosts: local_root
+  roles:
+  - profile_local_pki
+
+- hosts: proxy
+  roles:
+  - dumpall
+  - profile_keepalived
+  - profile_varnish
+  - profile_pound
+
+- hosts: web
+  roles:
+  - profile_web
+

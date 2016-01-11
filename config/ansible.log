@@ -1,0 +1,75 @@
+2016-01-11 17:03:22,453 p=20749 u=rcordier |   
+2016-01-11 17:03:22,453 p=20749 u=rcordier |  /usr/bin/ansible-playbook arch.yml
+2016-01-11 17:03:22,453 p=20749 u=rcordier |   
+2016-01-11 17:03:22,456 p=20749 u=rcordier |   [WARNING]: provided hosts list is empty, only localhost is available
+
+2016-01-11 17:03:33,470 p=20781 u=rcordier |   
+2016-01-11 17:03:33,470 p=20781 u=rcordier |  /usr/bin/ansible-playbook -i ../inventory/dev.ini arch.yml
+2016-01-11 17:03:33,470 p=20781 u=rcordier |   
+2016-01-11 17:05:26,220 p=20929 u=rcordier |   
+2016-01-11 17:05:26,221 p=20929 u=rcordier |  /usr/bin/ansible-playbook -i ../inventory/dev.ini arch.yml
+2016-01-11 17:05:26,221 p=20929 u=rcordier |   
+2016-01-11 17:05:26,360 p=20929 u=rcordier |  PLAY [local_root] ************************************************************* 
+2016-01-11 17:05:26,360 p=20929 u=rcordier |  GATHERING FACTS *************************************************************** 
+2016-01-11 17:05:27,267 p=20929 u=rcordier |  ok: [local_root]
+2016-01-11 17:05:27,269 p=20929 u=rcordier |  TASK: [pki-ca | root - create pki directory] ********************************** 
+2016-01-11 17:05:27,644 p=20929 u=rcordier |  ok: [local_root] => (item=/tmp/ansible/ca)
+2016-01-11 17:05:28,059 p=20929 u=rcordier |  ok: [local_root] => (item=/tmp/ansible/ca/certs)
+2016-01-11 17:05:28,508 p=20929 u=rcordier |  ok: [local_root] => (item=/tmp/ansible/ca/out)
+2016-01-11 17:05:28,508 p=20929 u=rcordier |  TASK: [pki-ca | root - generate private key] ********************************** 
+2016-01-11 17:05:28,990 p=20929 u=rcordier |  ok: [local_root]
+2016-01-11 17:05:28,991 p=20929 u=rcordier |  TASK: [pki-ca | client - generate private key] ******************************** 
+2016-01-11 17:05:29,413 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=CA/ST=Quebec/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=*.sfl.test', 'name': 'sfl'})
+2016-01-11 17:05:29,834 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=US/ST=NY/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=client1.sites.test', 'name': 'client1'})
+2016-01-11 17:05:30,245 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=FR/ST=Yvelines/L=Mezieres Sur Seine/O=Jeznet/OU=Kevin.net/CN=client2.sites.test', 'name': 'client2'})
+2016-01-11 17:05:30,665 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=CA/ST=Quebec/L=Montreal/O=Caca/OU=Ouca/CN=client3.sites.test', 'name': 'client3'})
+2016-01-11 17:05:30,665 p=20929 u=rcordier |  TASK: [pki-ca | client - generate cert request] ******************************* 
+2016-01-11 17:05:31,138 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=CA/ST=Quebec/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=*.sfl.test', 'name': 'sfl'})
+2016-01-11 17:05:31,617 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=US/ST=NY/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=client1.sites.test', 'name': 'client1'})
+2016-01-11 17:05:32,071 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=FR/ST=Yvelines/L=Mezieres Sur Seine/O=Jeznet/OU=Kevin.net/CN=client2.sites.test', 'name': 'client2'})
+2016-01-11 17:05:32,513 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=CA/ST=Quebec/L=Montreal/O=Caca/OU=Ouca/CN=client3.sites.test', 'name': 'client3'})
+2016-01-11 17:05:32,513 p=20929 u=rcordier |  TASK: [pki-ca | client - sign cert] ******************************************* 
+2016-01-11 17:05:32,940 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=CA/ST=Quebec/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=*.sfl.test', 'name': 'sfl'})
+2016-01-11 17:05:33,375 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=US/ST=NY/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=client1.sites.test', 'name': 'client1'})
+2016-01-11 17:05:33,779 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=FR/ST=Yvelines/L=Mezieres Sur Seine/O=Jeznet/OU=Kevin.net/CN=client2.sites.test', 'name': 'client2'})
+2016-01-11 17:05:34,171 p=20929 u=rcordier |  ok: [local_root] => (item={'subj': '/C=CA/ST=Quebec/L=Montreal/O=Caca/OU=Ouca/CN=client3.sites.test', 'name': 'client3'})
+2016-01-11 17:05:34,172 p=20929 u=rcordier |  PLAY [proxy] ****************************************************************** 
+2016-01-11 17:05:34,172 p=20929 u=rcordier |  GATHERING FACTS *************************************************************** 
+2016-01-11 17:05:36,578 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:05:37,612 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:05:37,623 p=20929 u=rcordier |  TASK: [dumpall | Dump all vars] *********************************************** 
+2016-01-11 17:05:38,797 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:05:42,205 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:05:42,217 p=20929 u=rcordier |  TASK: [dumpall | Retrieve dumpfile] ******************************************* 
+2016-01-11 17:05:42,735 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:05:42,776 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:05:42,787 p=20929 u=rcordier |  TASK: [dumpall | Remove dumpfile on the guest] ******************************** 
+2016-01-11 17:05:43,112 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:05:44,162 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:05:44,175 p=20929 u=rcordier |  TASK: [keepalived-base | Install keepalived (Centos)] ************************* 
+2016-01-11 17:05:49,369 p=20929 u=rcordier |  ok: [proxy2] => (item=keepalived,conntrack-tools,nc,nagios-plugins-procs,ipvsadm)
+2016-01-11 17:06:03,621 p=20929 u=rcordier |  ok: [proxy1] => (item=keepalived,conntrack-tools,nc,nagios-plugins-procs,ipvsadm)
+2016-01-11 17:06:03,630 p=20929 u=rcordier |  TASK: [keepalived-base | Fix systemd service unit] **************************** 
+2016-01-11 17:06:04,613 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:06:06,126 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:06:06,136 p=20929 u=rcordier |  TASK: [keepalived-base | Configure keepalived] ******************************** 
+2016-01-11 17:06:06,902 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:06:08,161 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:06:08,170 p=20929 u=rcordier |  TASK: [keepalived-base | Keepalived conf directory] *************************** 
+2016-01-11 17:06:08,593 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:06:09,722 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:06:09,732 p=20929 u=rcordier |  TASK: [keepalived-base | Start keepalived] ************************************ 
+2016-01-11 17:06:10,129 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:06:12,248 p=20929 u=rcordier |  ok: [proxy1]
+2016-01-11 17:06:12,260 p=20929 u=rcordier |  TASK: [keepalived-base | Push notify script] ********************************** 
+2016-01-11 17:06:13,124 p=20929 u=rcordier |  ok: [proxy2]
+2016-01-11 17:06:13,787 p=20929 u=rcordier |  fatal: [proxy1] => input file not found at /home/rcordier/prj/ansible_http_proxy_ha/roles/local/keepalived-base/templates/keepalived_notify.sh.j2 or /home/rcordier/prj/ansible/ansible_http_proxy_ha/playbooks/keepalived_notify.sh.j2
+2016-01-11 17:06:13,797 p=20929 u=rcordier |  TASK: [keepalived-base | Push monitoring script] ****************************** 
+2016-01-11 17:06:14,053 p=20929 u=rcordier |  fatal: [proxy2] => input file not found at /home/rcordier/prj/ansible_http_proxy_ha/roles/local/keepalived-base/templates/keepalived_status.sh.j2 or /home/rcordier/prj/ansible/ansible_http_proxy_ha/playbooks/keepalived_status.sh.j2
+2016-01-11 17:06:14,053 p=20929 u=rcordier |  FATAL: all hosts have already failed -- aborting
+2016-01-11 17:06:14,053 p=20929 u=rcordier |  PLAY RECAP ******************************************************************** 
+2016-01-11 17:06:14,054 p=20929 u=rcordier |             to retry, use: --limit @../config/retry/arch.retry
+
+2016-01-11 17:06:14,054 p=20929 u=rcordier |  local_root                 : ok=6    changed=0    unreachable=0    failed=0   
+2016-01-11 17:06:14,054 p=20929 u=rcordier |  proxy1                     : ok=9    changed=0    unreachable=1    failed=0   
+2016-01-11 17:06:14,054 p=20929 u=rcordier |  proxy2                     : ok=10   changed=0    unreachable=1    failed=0   

@@ -1,0 +1,10 @@
+---
+# handlers file for pound-base
+#
+- name: clean default pound configuration
+  template:
+    dest: "{{ pound_default_conf_file }}"
+    src: pound.cfg.j2
+
+- name: restart pound
+  service: name=pound state=restarted

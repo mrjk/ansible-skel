@@ -1,0 +1,15 @@
+
+
+
+
+# Forward requests to pool
+if ( req.http.host ~ "client3\.sites\.test" ) {
+
+	if (req.url ~ "\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm|gz|tgz|bz2|tbz|mp3|ogg|mp4|flv|f4v|pdf)(\?.*|)$") {
+		unset req.http.Cookie;
+	}  
+
+	set req.backend_hint = web.backend();
+	return (pass);
+	#return (hash);
+}

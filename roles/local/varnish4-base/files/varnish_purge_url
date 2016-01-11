@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SCRIPT=$(basename $0)
+url="/*"
+
+if [ ! -z $1 ] ; then
+        case "$1" in
+                -h|--help) echo "Usage $SCRIPT URL"; echo "For example URL : $SCRIPT /accueil" ; echo "URL= /* if argument missing"; exit 1 ;;
+                *) url=$1;;
+        esac ;
+fi
+echo "ban.url $url" | nc -q 1 127.0.0.1 6082 &> /dev/null
+echo "Varnish: $url cleared"
+

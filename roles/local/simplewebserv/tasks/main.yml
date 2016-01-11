@@ -1,0 +1,29 @@
+---
+# tasks file for simplewebserv
+
+- name: Create unit file for simple server
+  template:
+    src: simplehttp.service.j2
+    dest: /etc/systemd/system/simplehttp.service
+  notify:
+    - reload systemd
+    - start simple server
+
+- name: Create root directory
+  file:
+    path: "{{ simplewebserv_root }}"
+    state: directory
+  notify:
+    - start simple server
+
+- name: Create index file
+  template:
+    src: index.html.j2
+    dest: /var/www/default/index.html
+
+- name: Start simple http server
+  service: 
+    name: simplehttp
+    state: started
+    enabled: yes
+

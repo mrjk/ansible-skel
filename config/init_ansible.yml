@@ -1,0 +1,33 @@
+
+
+- hosts: 127.0.0.1
+  connection: local
+  sudo: no
+
+  vars: 
+    ansible_vendors_path: ../roles/vendors/
+    ansible_vendors_requirements: ../roles/requirements.yml
+
+  tasks:
+  - name: Include requirements
+    include_vars: "{{ ansible_vendors_requirements }}"
+#    with_first_found:
+#    - ../../requirements.yml
+  
+  - name: Install modules via Ansible Galaxy
+    shell: "ansible-galaxy install -f -p {{ ansible_vendors_path }} {{ item.value.source }}{% if item.value.source != item.key %} &&mv {{ ansible_vendors_path }}/{{ item.value.source }} {{ ansible_vendors_path }}/{{ item.key }}{%endif %}"
+    with_dict: ansible_vendors
+    when: item.value.type == "ansible_galaxy"
+  
+  - name: Install modules via Git
+    git:
+      dest: "{{ ansible_vendors_path }}/{{ item.key }}"
+      repo: "{{ item.value.source }}"
+      force: yes
+    with_dict: ansible_vendors
+    when: item.value.type == "git_clone"
+
+
+
+
+

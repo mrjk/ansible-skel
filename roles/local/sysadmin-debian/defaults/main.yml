@@ -1,0 +1,60 @@
+---
+
+sysadmin_sysupdate: no
+
+sysadmin_debian_pkgs:
+- aptitude
+- bash-completion
+- ca-certificates
+- colordiff
+- cron-apt
+- curl
+- dnsutils
+- dos2unix
+- dtrx
+- grc
+- htop
+- iftop
+- iotop
+- iputils-ping
+- less
+- lsb-release
+- lsof
+#- molly-guard
+- most
+- ncdu
+- net-tools
+- netcat
+- netstat-nat
+- openssl
+- psmisc
+- rsync
+- telnet
+- tree
+- unzip
+- vim
+- wget
+- whois
+
+
+sysadmin_centos_pkgs:
+- bash-completion
+- htop
+- lsof
+- ncdu
+- net-tools
+- policycoreutils-python
+- psmisc
+- screen
+- telnet
+- tree
+- unzip
+- vim
+- wget
+- bind-utils
+- iftop
+- iotop
+- lynx
+- strace
+- tcpdump
+

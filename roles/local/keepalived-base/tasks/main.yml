@@ -1,0 +1,55 @@
+---
+
+# Install packages
+- name: Install keepalived (Centos)
+  yum: name="{{ item }}" state=present
+  when: ansible_os_family == "RedHat"
+  with_items:
+  - keepalived
+  - conntrack-tools
+  - nc
+  - nagios-plugins-procs
+  - ipvsadm
+
+
+# Configure keepalived
+
+- name: Fix systemd service unit
+  copy:
+    src=keepalived.service
+    dest=/etc/systemd/system/keepalived.service
+  notify:
+    - Reload Systemd
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: Configure keepalived
+  template: src=keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf
+  tags: keepalived
+  notify: restart keepalived
+
+- name: Keepalived conf directory
+  file: path=/etc/keepalived/conf.d/ state=directory
+
+# Direct routing config
+#- name: Enable IP forwarding
+#  sysctl: name=net.ipv4.ip_forward value=1 state=present sysctl_file=/etc/sysctl.d/net_forward.conf
+
+
+- name: Start keepalived
+  service: name=keepalived state=running enabled=yes
+  tags: keepalived
+
+- name: Push notify script
+  template:
+    src: keepalived_notify.sh.j2
+    dest: /usr/local/bin/keepalived_notify
+    mode: "u=rwx,g=rx,o=rx"
+
+- name: Push monitoring script
+  template:
+    src: keepalived_status.sh.j2
+    dest: /usr/local/bin/sfl_kpv_status
+    mode: "u=rwx,g=rx,o=rx"
+

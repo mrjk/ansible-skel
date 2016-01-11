@@ -1,0 +1,41 @@
+---
+# defaults file for pound-base
+
+
+pound_local_cert_dir: /tmp/ansible/ca/out
+pound_local_cert_list:
+
+pound_self_signed_cert: yes
+pound_self_signed_subj: "/C=CA/ST=Quebec/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=*.sfl.test"
+
+# Listen HTTP
+pound_listeners:
+- type: http
+  port: 80
+  addr: 0.0.0.0
+- type: https
+  port: 443
+  addr: 0.0.0.0
+  opts:
+  - name: Cert
+    type: cert
+    value: "{{ pound_local_cert_list }}"
+  - name: Ciphers
+    type: string
+    value:
+    - EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH:EDH+aRSA:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!RC4
+  - name: SSLHonorCipherOrder
+    value:
+    - 1
+  - name: Disable
+    value:
+    - SSLv2
+    - SSLv3
+
+
+# Default Backends
+pound_backends:
+- addr: 127.0.0.1
+  port: 8080
+
+

@@ -1,0 +1,85 @@
+---
+
+allow_duplicates: yes
+dependencies:
+
+- role: keepalived-base
+  tags:
+  - keepalived
+
+
+- role: keepalived-vrrp
+  tags:
+  - keepalived-vrrp
+
+  keepalived_vrrp_ansible_group: keepalived
+  keepalived_vrrp_name: web
+  keepalived_vrrp_virtual_router_id: 10
+  keepalived_vrrp_state: "{{ ( inventory_hostname in groups[keepalived_vrrp_ansible_group]|first ) | ternary('master','backup') }}"
+  keepalived_vrrp_ip: 10.0.42.10
+  keepalived_vrrp_netmask: 24
+  keepalived_vrrp_interface: eth1
+  keepalived_vrrp_auth_pass: vosavyumwacifib
+  keepalived_vrrp_check_interval: 1
+
+
+- role: keepalived-lvs
+  tags:
+  - keepalived-lvs
+
+  keepalived_lvs_name: web_http
+  keepalived_lvs_ip: 10.0.42.10
+  keepalived_lvs_port: 80
+  keepalived_lvs_netmask: 24
+
+  keepalived_lvs_protocol: TCP
+  keepalived_lvs_kind: NAT
+  keepalived_lvs_algo: rr
+
+  keepalived_lvs_rs:
+  - ip: 10.0.42.11
+    port: 80
+    checks:
+    - type: http
+      path: /
+      status_code: 200
+  - ip: 10.0.42.12
+    port: 80
+    checks:
+    - type: http
+      path: /
+      status_code: 200
+
+  keepalived_lvs_sorry:
+    ip: 127.0.0.1
+    port: 8000
+
+
+- role: keepalived-lvs
+  tags:
+  - keepalived-lvs
+
+  keepalived_lvs_name: web_https
+  keepalived_lvs_ip: 10.0.42.10
+  keepalived_lvs_port: 443
+  keepalived_lvs_netmask: 24
+
+  keepalived_lvs_protocol: TCP
+  keepalived_lvs_kind: NAT
+  keepalived_lvs_algo: rr
+
+  keepalived_lvs_rs:
+  - ip: 10.0.42.11
+    port: 443
+    checks:
+    - type: http
+      path: /
+      status_code: 200
+  - ip: 10.0.42.12
+    port: 443
+    checks:
+    - type: http
+      path: /
+      status_code: 200
+
+

@@ -1,0 +1,73 @@
+#
+# Default pound.cfg
+#
+# Pound listens on port 80 for HTTP and port 443 for HTTPS
+# and distributes requests to 2 backends running on localhost.
+# see pound(8) for configuration directives.
+# You can enable/disable backends with poundctl(8).
+#
+
+User "pound"
+Group "pound"
+Control "/var/lib/pound/pound.cfg"
+
+Threads	128
+
+LogFacility	daemon
+LogLevel	{{ ( arch_debug == 'True' )|ternary('5','2') }} 
+
+
+# Backend configuration
+DynScale	1
+Alive		5
+TimeOut		15
+Client		10
+
+
+# SSL configuration
+ECDHCurve       "prime256v1"
+
+
+
+# Listening interfaces
+{% for listener in pound_listeners %}
+{% if listener.type == 'https' %}ListenHTTPS{% else %}ListenHTTP{% endif %}
+
+	# Base
+	Address	{{ listener.addr }}
+	Port	{{ listener.port }}
+
+	#Options
+	AddHeader	"X-Forwarded-Proto: http{% if listener.type == 'https' %}s{% endif %}"
+	AddHeader	"X-Forwarded-By: pound"
+	AddHeader	"X-Pound-Server: {{ ansible_hostname }}"
+
+{% if listener.opts is defined and listener.opts|length > 0 %}
+{% for opt in listener.opts %}{% if opt.value is defined %}{% for i in opt.value %}{% if opt.type is undefined or opt.type == "int" %}
+        {{ opt.name }}          {{ i }}
+{% elif opt.type == "string" %}
+        {{ opt.name }}          "{{ i }}"
+{% elif opt.type == "cert" %}
+        Cert    	"{{ pound_default_conf_dir }}/cert/{{ i }}.pem"
+{% endif %}{% endfor%}{% endif%}{% endfor %}{% endif %}
+End
+
+{% endfor %}
+
+
+# Backends
+Service
+{% for backend in pound_backends %}
+	BackEnd
+		Address	{{ backend.addr }}
+		Port	{{ backend.port }}
+	End
+{% endfor %}
+{% if pound_backend_emergency is defined%}
+	Emergency
+		Address	{{ pound_backend_emergency.addr }}
+		Port	{{ pound_backend_emergency.port }}
+	End
+{% endif%}
+End
+

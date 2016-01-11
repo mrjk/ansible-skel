@@ -1,0 +1,103 @@
+#!/bin/bash
+
+set -i 
+
+echo -e "${CYAN}Service Status:"
+echo -e "================${NIL}"
+
+
+echo -en "varnish:\n" 
+
+COUNT=$( pgrep varnish | wc -l )
+echo -ne "\tProc:\t"
+[ $COUNT -gt 1 ] && echo -e "${GREEN}OK${NIL}, $COUNT processes found" || echo -e "${RED}KO${NIL}, No processes found" 
+
+PORTS=$(netstat  -lntp | grep varnish | awk '{print $4 "(" $1 ")" }' | cut -d : -f 2 | xargs  | tr ' ' ',')
+echo -ne "\tPorts:\t"
+[ -n "$PORTS" ] && echo -e "${GREEN}OK${NIL}, $PORTS" || echo -e "${RED}KO${NIL}, No TCP or UDP sockets"
+
+
+
+echo -en "pound:\n" 
+
+COUNT=$( pgrep pound | wc -l )
+echo -ne "\tProc:\t"
+[ $COUNT -gt 1 ] && echo -e "${GREEN}OK${NIL}, $COUNT processes found" || echo -e "${RED}KO${NIL}, No processes found" 
+
+PORTS=$(netstat  -lntp | grep pound | awk '{print $4 "(" $1 ")" }' | cut -d : -f 2 | xargs  | tr ' ' ',')
+echo -ne "\tPorts:\t"
+[ -n "$PORTS" ] && echo -e "${GREEN}OK${NIL}, $PORTS" || echo -e "${RED}KO${NIL}, No TCP or UDP sockets"
+
+
+
+echo -en "keepalived:\n" 
+
+COUNT=$( pgrep keepalived | wc -l )
+echo -ne "\tProc:\t"
+[ $COUNT -eq 3 ] && echo -e "${GREEN}OK${NIL}, $COUNT processes found" || echo -e "${RED}KO${NIL}, $COUNT processes found insted of 3" 
+
+echo -e "${CYAN}"
+echo -e "Varnish - Status:"
+echo -e "================${NIL}"
+varnishadm backend.list 2> /dev/null ; RC=$?
+[ $RC -ne 0 ] && echo -e "${RED}ERROR${NIL}: varnishadm does not responds, please ensure Varnish is running"
+
+
+echo -e "${CYAN}"
+echo -e "Pound - Status:"
+echo -e "================${NIL}"
+poundctl -c  /var/lib/pound/pound.cfg 2> /dev/null ; RC=$?
+[ $RC -ne 0 ] && echo -e "${RED}ERROR${NIL}: poundctl does not responds, please ensure Pound is running"
+
+
+
+
+echo -e "${CYAN}"
+echo -e "Keepalived - LVS Status:"
+echo -e "================${NIL}"
+IPVS=$(ipvsadm-save  -n | grep '\-a'|  awk '{print $3 ";" $5 }')
+
+if [ -z "$IPVS" ]; then
+	echo -e "${RED}ERROR${NIL}: No LVS rules!"
+else
+	for i in $IPVS ; do
+		#echo $i
+
+		# Extract infos
+		SRC_IP=$(echo $i | cut -d ';' -f 1 | cut -d ':' -f 1 )
+		SRC_PORT=$(echo $i | cut -d ';' -f 1 | cut -d ':' -f 2 )
+		DEST_IP=$(echo $i | cut -d ';' -f 2 | cut -d ':' -f 1 )
+		DEST_PORT=$(echo $i | cut -d ';' -f 2 | cut -d ':' -f 2 )
+
+		# Check info
+
+		# Source IP
+		ip a l | grep $SRC_IP > /dev/null ; RC=$?
+		[ $RC -eq 0 ] && echo -ne "$GREEN" || echo -ne "$YELLOW" ; echo -ne "\t${SRC_IP}${NIL}:${SRC_PORT}\t=> "
+		
+		# Dest IP
+		ip a l | grep $DEST_IP > /dev/null ; RC=$?
+		[ $RC -eq 0 ] && echo -ne "$GREEN" || echo -ne "$YELLOW" ; echo -ne "${DEST_IP}${NIL}:"
+
+		ip a l | grep $DEST_IP > /dev/null ; RC=$?
+		if [ $RC -eq 0 ]; then
+			netstat  -lntp | tail -n +3 | awk '{print $4 }' | cut -d ":" -f 2 | grep "^${DEST_PORT}$" > /dev/null ; RC=$?
+			[ $RC -eq 0 ] && echo -ne "$GREEN" || echo -ne "$RED" ; echo -e "${DEST_PORT}${NIL}"
+		else
+			echo -e "${YELLOW}${DEST_PORT}${NIL}"
+		fi
+
+
+	done
+fi
+
+
+echo -e "${CYAN}"
+echo -e "Keepalived - History:"
+echo -e "================${NIL}"
+journalctl | grep "keepalived_status\[" | tail -n 5 | awk '{ print "[" $1 "-"$2 " "$3 "] " substr($0, index($0,$6)) }'
+
+
+echo -e "${NIL}"
+
+

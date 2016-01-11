@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SCRIPT=$(basename $0) 
+if [ ! -z $1 ] ; then
+        case "$1" in
+                -h|--help) echo "Usage $SCRIPT HOST"; echo "For example HOST : $SCRIPT exemple.com" ; exit 1 ;;
+                *) HOST=$1;;
+        esac ;
+else
+        echo "Usage $SCRIPT HOST"; echo "For example HOST : $SCRIPT exemple.com" ; exit 1 ;
+fi
+echo "ban req.http.host ~ \"$HOST\"" | nc -q 1 127.0.0.1 6082 &> /dev/null
+echo "Varnish: $HOST cleared"
+

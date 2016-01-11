@@ -1,0 +1,16 @@
+---
+
+- name: Dump all vars
+  template: src=dumpall.j2 dest={{ dumpall_guest_destination }}
+  changed_when: 0
+
+- name: Retrieve dumpfile
+  fetch: "src={{ dumpall_guest_destination }} dest={{ dumpall_host_destination }} flat={{ dumpall_flat_mode }}"
+  when: "dumpall_host_destination is defined"
+  changed_when: 0
+
+- name: Remove dumpfile on the guest
+  file: path={{ dumpall_guest_destination }} state=absent
+  when: "dumpall_host_destination is defined"
+  changed_when: 0
+

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SCRIPT=$(basename $0)
+
+case "$1" in
+        -h|--help) echo "Usage $SCRIPT"; echo "For example: $SCRIPT" ; exit 1 ;;
+esac ;
+
+echo "ban.url /*" | nc -q 1 127.0.0.1 6082
+
+if [ $? -eq 0 ]; then
+        echo "Varnish: Whole cache has been purged"
+else
+        echo "Varnish: An error happend"
+fi

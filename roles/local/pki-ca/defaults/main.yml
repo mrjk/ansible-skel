@@ -1,0 +1,8 @@
+---
+# defaults file for pki-ca
+
+pki_ca_dir: /tmp/ansible/ca
+pki_ca_subj: "/C=CA/ST=Quebec/L=Montreal/O=SavoirFaireLinux/OU=IT Department/CN=*.sfl.test"
+pki_ca_local_install: yes
+pki_ca_root_name: rootca_test
+pki_ca_key_size: 2048

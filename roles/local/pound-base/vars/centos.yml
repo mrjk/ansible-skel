@@ -1,0 +1,7 @@
+---
+# vars file for pound-base
+
+pound_default_conf_file: /etc/pound.cfg
+pound_default_conf_dir: /etc/pound.d
+
+
