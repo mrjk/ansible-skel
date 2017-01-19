@@ -1,0 +1,24 @@
+---
+# Documentation:
+# This playbook helps to check if all hosts defined into the inventory
+# are joinable. This playbook can also retrieve a dump of all remote
+# hosts. This should support most UNIX operating systems (OSX included).
+
+
+- hosts: all
+
+  vars:
+    dump_vars: true
+
+  pre_tasks:
+
+    - name: Test Ansible ping
+      ping:
+
+    - name: Run a command to get target release
+      shell: cat /etc/*ease || sw_vers
+      changed_when: false
+
+  roles:
+    - role: dumpall
+#      when: dump_vars | bool

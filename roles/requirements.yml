@@ -3,6 +3,6 @@
 # Doc: http://docs.ansible.com/ansible/galaxy.html#id8
 
 - src: mrjk.dumpall
-  version: v2.0.0
+  version: dev
   name: dumpall
 
