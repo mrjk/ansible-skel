@@ -2,11 +2,18 @@
 
 # From: https://github.com/lxhunter/ansible-filter-plugins/blob/master/collection_utils.py
 
+# Import modules
 import unittest
 import re
 import unicodedata
 import textwrap
-from slugify import slugify
+
+# Try to find external modules
+try:
+    from slugify import slugify
+    HAS_SLUGIFY = True
+except ImportError:
+    HAS_SLUGIFY = False
 
 
 def _string_sanity_check(string):
@@ -198,6 +205,8 @@ def rtrim(string, chars=None):
 
 def _slugify(string, entities=True, decimal=True, hexadecimal=True, max_length=0, word_boundary=False,
              separator='-', save_order=False, stopwords=()):
+    if not HAS_SLUGIFY:
+        module.fail_json(msg='slugify required for this module')
     if string is None:
         return ''
     sanitzed_string = _string_sanity_check(string)
@@ -559,6 +568,8 @@ class TestStringUtlisFunctions(unittest.TestCase):
         self.assertEqual(rtrim(None), '')
 
     def test_slugify(self):
+        if not HAS_SLUGIFY:
+            module.fail_json(msg='slugify required for this module')
         self.assertEqual(_slugify('Jack & Jill like numbers 1,2,3 and 4 and silly characters ?%.$!/'),
                          'jack-jill-like-numbers-1-2-3-and-4-and-silly-characters')
         self.assertEqual(_slugify('I know latin characters: á í ó ú ç ã õ ñ ü ă ș ț'),
