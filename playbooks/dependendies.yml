@@ -1,0 +1,34 @@
+---
+
+# Documentation:
+# This playbook will install all dependencies roles. The configuration
+# is sourced from roles/requirements.yml and all vendor modules are 
+# installed by default into roles/vendors/. Each time this playbook is
+# call, all vendor roles will be purged.
+
+
+- hosts: localhost
+  connection: local
+
+  vars:
+    force_purge: true
+    installation_dir: roles/vendors
+    installation_prefix: ../
+
+  tasks:
+#    - name: Get current working path
+#      command: pwd
+
+    - name: Remove existing vendor roles
+      file:
+        path: "{{ installation_prefix }}{{ installation_dir }}"
+        state: absent
+      when: force_purge | bool
+
+    - name: Install all vendor roles
+      command: >
+        ansible-galaxy install 
+        --force
+        --role-file {{ installation_prefix }}roles/requirements.yml 
+        --roles-path {{ installation_prefix }}{{ installation_dir }}
+
