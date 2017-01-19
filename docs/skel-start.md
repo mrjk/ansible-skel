@@ -2,7 +2,7 @@
 
 There is the way to install your dependencies:
 
-  ansible-playbook  playbooks/dependencies.yml
+  ansible-playbook  playbooks/requirements.yaml
 
 Then you can test your remote host connections:
   
