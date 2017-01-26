@@ -1,8 +1,12 @@
 ---
-client_to_manage:
-- sfl
-- client1
-- client2
-- client3
 
-arch_debug: True
+# Documentation:
+# ######################################
+# Put here all the variables associated to
+# the development environment. To make this work,
+# please be sure you have defined a group called [dev]
+# into your inventory. You can do this for all of your
+# environments.
+
+targets_debug: true
+
