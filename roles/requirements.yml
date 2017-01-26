@@ -1,5 +1,6 @@
 ---
 
+# TODO: Do a better documentation
 # Doc: http://docs.ansible.com/ansible/galaxy.html#id8
 
 - src: mrjk.dumpall
