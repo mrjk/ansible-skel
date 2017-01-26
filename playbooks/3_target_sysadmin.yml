@@ -1,4 +1,6 @@
 
+# TODO: To improve, should install the default utils: screen, vim, htop, etc ...
+
 - hosts: vagrant
   user: root
   roles:

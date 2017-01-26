@@ -7,6 +7,8 @@
 # call, all vendor roles will be purged.
 
 
+# TODO: Find a work around for task omnipotence
+
 - hosts: localhost
   connection: local
 
@@ -28,7 +30,7 @@
     - name: Install all vendor roles
       command: >
         ansible-galaxy install 
-        --force
+        {{ ( force_purge | bool ) | ternary('--force','') }}
         --role-file {{ installation_prefix }}roles/requirements.yml 
         --roles-path {{ installation_prefix }}{{ installation_dir }}
 
