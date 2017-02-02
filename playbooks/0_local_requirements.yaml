@@ -8,6 +8,7 @@
 
 
 # TODO: Find a work around for task omnipotence
+# TODO: Seems not working on centos 6
 
 - hosts: localhost
   connection: local
@@ -18,8 +19,12 @@
     installation_prefix: ../
 
   tasks:
-#    - name: Get current working path
-#      command: pwd
+#     - name: Get current dir
+#       command: pwd
+#       register: pwd
+# 
+#     - name: Show current path
+#       debug: msg="{{ pwd }}"
 
     - name: Remove existing vendor roles
       file:
