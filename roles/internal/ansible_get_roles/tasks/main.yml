@@ -1,0 +1,19 @@
+---
+# tasks file for ansible_get_roles
+
+
+- name: Get roles | Remove existing vendor roles
+  file:
+    path: "{{ installation_prefix }}{{ installation_dir }}"
+    state: absent
+  when: force_purge | bool
+
+- name: Get roles | Install all vendor roles
+  command: >
+    ansible-galaxy install 
+    {{ ( force_purge | bool ) | ternary('--force','') }}
+    --role-file {{ installation_prefix }}roles/requirements.yml 
+    --roles-path {{ installation_prefix }}{{ installation_dir }}
+
+
+

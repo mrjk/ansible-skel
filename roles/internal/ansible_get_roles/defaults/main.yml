@@ -1,0 +1,6 @@
+---
+# defaults file for ansible_get_roles
+
+installation_prefix: .
+installation_dir: vendors
+force_purge: false
