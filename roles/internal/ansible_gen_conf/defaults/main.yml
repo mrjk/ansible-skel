@@ -1,0 +1,5 @@
+---
+# defaults file for ansible_gen_conf
+
+installation_prefix: .
+force_purg: false
