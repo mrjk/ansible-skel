@@ -8,34 +8,23 @@
 
 
 # TODO: Find a work around for task omnipotence
-# TODO: Seems not working on centos 6
 
 - hosts: localhost
   connection: local
+  gather_facts: false
 
   vars:
-    force_purge: false
-    installation_dir: roles/vendors
-    installation_prefix: ../
+    root_dir: ../
+    purge: false
 
-  tasks:
-#     - name: Get current dir
-#       command: pwd
-#       register: pwd
-# 
-#     - name: Show current path
-#       debug: msg="{{ pwd }}"
+  roles:
 
-    - name: Remove existing vendor roles
-      file:
-        path: "{{ installation_prefix }}{{ installation_dir }}"
-        state: absent
-      when: force_purge | bool
+    - role: ansible_get_roles
+      force_purge: "{{ purge }}"
+      installation_dir: roles/vendors
+      installation_prefix: "{{ root_dir }}"
 
-    - name: Install all vendor roles
-      command: >
-        ansible-galaxy install 
-        {{ ( force_purge | bool ) | ternary('--force','') }}
-        --role-file {{ installation_prefix }}roles/requirements.yml 
-        --roles-path {{ installation_prefix }}{{ installation_dir }}
+    - role: ansible_gen_conf
+      force_purge: "{{ purge }}"
+      installation_prefix: "{{ root_dir }}"
 
