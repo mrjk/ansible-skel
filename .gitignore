@@ -1,11 +1,10 @@
 
 # Ignore some config files/dir
-config/tmp/*
-config/ansible.log
-config/known_hosts
+/.tmp/*
+/config/known_hosts
 
 # Ignore uptream code directory
-roles/vendors/*
+/roles/vendors/*
 
 # Ignore generic files
 *.pyc
