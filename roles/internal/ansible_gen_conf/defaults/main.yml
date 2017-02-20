@@ -1,5 +1,19 @@
 ---
 # defaults file for ansible_gen_conf
 
+# Default settings
 installation_prefix: .
-force_purg: false
+force_purge: false
+ansible_cfg_src: nil
+ansible_cfg_dst: ansible_new.cfg
+
+# Section settings enablers
+enable_section_default_files: true
+enable_section_custom_paths: true
+enable_section_escalation: true
+enable_section_sudo: true
+enable_section_ssh: true
+enable_section_paramiko: true
+enable_section_accelerate: false
+enable_section_selinux: true
+enable_section_colors: false

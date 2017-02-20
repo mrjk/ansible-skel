@@ -1,0 +1,11 @@
+---
+# tasks file for Ansible conf generator
+
+
+# Generate an ansible configuration from the template
+- name: Ansible conf generator | Generate ansible.cfg from template
+  template:
+    src: "ansible-{{ ansible_version.major }}.{{ ansible_version.minor }}.cfg.j2"
+    dest: "{{ installation_prefix }}/{{ ansible_cfg_dst }}"
+    force: "{{ force_purge }}"
+

@@ -1,0 +1,23 @@
+---
+# tasks file for Ansible conf generator
+
+# Generate an ansible configuration from an existing file
+- name: Ansible conf generator | Generate ansible.cfg for CI
+  copy:
+    src: "{{ installation_prefix }}/{{ ansible_cfg_src }}"
+    dest: "{{ installation_prefix }}/{{ ansible_cfg_dst }}"
+    remote_src: True
+    force: "{{ force_purge }}"
+
+- name: Ansible conf generator | Delete SSH section ansible.cfg for CI
+  ini_file:
+    dest: "{{ installation_prefix }}/{{ ansible_cfg_dst }}"
+    section: ssh_connection
+    state: absent
+
+- name: Ansible conf generator | Update paths in ansible.cfg for CI
+  replace:
+    dest: "{{ installation_prefix }}/{{ ansible_cfg_dst }}"
+    regexp: '([ :])(plugins|inventory|roles|config)/'
+    replace: '\1{{ installation_prefix }}\2/'
+
