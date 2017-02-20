@@ -1,0 +1,17 @@
+---
+# Documentation:
+# This playbook should configure the targets with the 'minimum syncdical' as 
+# we say in France. Basically, it will install git, screen, htop, push a nifty
+# shell prompt, and many other little features.
+# TODO: This role has to be implemented
+
+
+- name: Ensure Python is available on targets
+  hosts: targets
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Not implemented yet
+      debug:
+        msg: 'This has not been implemented yet'
+

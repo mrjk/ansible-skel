@@ -1,31 +1,28 @@
 ---
 
 # Documentation:
-# This playbook will install all dependencies roles. The configuration
-# is sourced from roles/requirements.yml and all vendor modules are 
-# installed by default into roles/vendors/. Each time this playbook is
-# call, all vendor roles will be purged.
+# This playbook will create an alternate ansible.cfg config file. It
+# is pretty useful when you want to integrate your playbooks in Jenkins,
+# in Vagrant or any other tools like that. The role functionnality is not
+# very clear yet, but it will be improved by the time (and maybe
+# externalized later as it is not a core feature of ansible-skel.)
 
-
-# TODO: Find a work around for task omnipotence
 
 - hosts: localhost
   connection: local
   gather_facts: false
+  become: false
 
   vars:
     root_dir: ../
-    purge: false
+    purge: true
 
   roles:
-
-    - role: ansible_get_roles
-      force_purge: "{{ purge }}"
-      installation_dir: roles/vendors
-      installation_prefix: "{{ root_dir }}"
 
     - role: ansible_gen_conf
       force_purge: "{{ purge }}"
       installation_prefix: "{{ root_dir }}"
       ansible_cfg_dst: ansible_ci.cfg
+      enable_section_ssh: false
+      enable_section_selinux: false
 
