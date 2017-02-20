@@ -96,6 +96,31 @@ As this skeleton comes with some python plugins, you may need to install extra P
 
 Usually, a simple ```pip install slugify netaddr``` should let use those plugins. At this stage, documentation for the plugins is pretty poor, and you may need to read the source code if you want to understand how to use them.
 
+## Contributing
+
+The git log is historically a bit messy. To avoid this pattern, and help colaborators to work on it, we assume the following convention:
+
+* **Feat**: A new feature
+* **Fix**: A bug fix
+* **Docs**: Documentation only changes
+* **Style**: Changes that do not affect the meaning of the code (white-space, formatting, missing
+  seMi-colons, etc)
+* **Refactor**: A code change that neither fixes a bug nor adds a feature
+* **Clean**: A portion of legacy code
+* **Perf**: A code change that improves performance
+* **Test**: Adding missing or correcting existing tests
+* **Chore**: Changes to the build process or auxiliary tools and libraries such as documentation
+  generation
+
+
+Each commit message must have a maximum lenght of 72 characters. The title must follow the imperative at the present tense. The title must start with an uppercase letter, and there is no dot at the end of the sentence. An easy way to remember is: ''if applied, this commit will <commit_title>''. Optionnaly, it is a good practice to add some explanations of what the commit do.
+
+Examples:
+
+* Feat: Create an internal role to test target connection
+* Clean: Remove legacy commented code in helpers
+* Docs: Update the documentation about commit messages convention
+
 ## Releases
 
 * 0.5 - 26/01/2017
