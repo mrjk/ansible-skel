@@ -102,6 +102,7 @@ The git log is historically a bit messy. To avoid this pattern, and help colabor
 
 * **Feat**: A new feature
 * **Fix**: A bug fix
+* **Change**: A behaviour
 * **Docs**: Documentation only changes
 * **Style**: Changes that do not affect the meaning of the code (white-space, formatting, missing
   seMi-colons, etc)
