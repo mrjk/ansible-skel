@@ -1,0 +1,13 @@
+---
+# tasks file for ansible_install_python
+
+
+- name: Python | Install package
+  raw: test -e /usr/bin/python || ( (apt -qqy update && apt install -qy python) || (apt -y update && apt install -y python) || (yum install -y python python-simplejson ) || ( dnf install -y python python-simplejson ) )
+  register: output
+  changed_when: output.stdout != ""
+
+- name: Python | Test ping
+  ping:
+
+
