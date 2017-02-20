@@ -96,6 +96,16 @@ As this skeleton comes with some python plugins, you may need to install extra P
 
 Usually, a simple ```pip install slugify netaddr``` should let use those plugins. At this stage, documentation for the plugins is pretty poor, and you may need to read the source code if you want to understand how to use them.
 
+## Alternatives
+
+Some other people has already made a such exercise, and there is below what I found. I would recommend you to try other esier skeletons if you are comfortable with Ansible:
+
+* https://github.com/linsomniac/ansible-skeleton
+* https://github.com/bertvv/ansible-skeleton
+* https://github.com/mtpereira/ansible-skel
+* https://github.com/mattjbarlow/ansible-directory
+
+
 ## Contributing
 
 The git log is historically a bit messy. To avoid this pattern, and help colaborators to work on it, we assume the following convention:
