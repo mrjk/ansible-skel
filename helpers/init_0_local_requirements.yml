@@ -12,6 +12,7 @@
 - hosts: localhost
   connection: local
   gather_facts: false
+  become: false
 
   vars:
     root_dir: ../
@@ -23,9 +24,4 @@
       force_purge: "{{ purge }}"
       installation_dir: roles/vendors
       installation_prefix: "{{ root_dir }}"
-
-    - role: ansible_gen_conf
-      force_purge: "{{ purge }}"
-      installation_prefix: "{{ root_dir }}"
-      ansible_cfg_dst: ansible_ci.cfg
 
