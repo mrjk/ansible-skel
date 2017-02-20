@@ -5,20 +5,19 @@
 # hosts. This should support most UNIX operating systems (OSX included).
 
 
-- hosts: all
+- name: Ensure Python is available on targets
+  hosts: all
+  become: true
+  gather_facts: false
+  roles:
+    - role: ansible_install_python
 
+- name: Test the connection and dump targets environment
+  hosts: all
+  become: false
   vars:
     dump_vars: true
-
-  pre_tasks:
-
-    - name: Test Ansible ping
-      ping:
-
-    - name: Run a command to get target release
-      shell: cat /etc/*ease || sw_vers
-      changed_when: false
-
   roles:
+    - role: ansible_test_connection
     - role: dumpall
-#      when: dump_vars | bool
+      when: dump_vars | bool
