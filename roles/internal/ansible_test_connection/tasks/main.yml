@@ -1,0 +1,15 @@
+---
+# tasks file for ansible_test_connection
+
+- name: Connexion | Test Ansible ping
+  ping:
+
+- name: Connexion | Run a command to get target release
+  shell: cat /etc/*ease || sw_vers
+  changed_when: false
+  register: os_release
+                                                                                                  
+- name: Connexion | Show OS release
+  debug:
+    msg: "{{ os_release.stdout_lines }}"
+
