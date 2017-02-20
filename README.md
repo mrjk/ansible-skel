@@ -137,3 +137,23 @@ Please read [GNU GENERAL PUBLIC LICENSE](LICENSE).
 There are a lot of goood ideas taken from the [enginyoyen ansible best practice repository](https://github.com/enginyoyen/ansible-best-practises/). The rest comes from some colleagues (Hi [Simon](https://github.com/spiette) !) and my customer experience.
 
 
+Ansible-skel by skel:
+``` text
+           .-. 
+ {`:      (o.O)
+  \\       |~| 
+   \\     __|__
+     o===o.=|=.o\
+          .=|=. \\
+          .=|=. ::}  
+           _=_  
+          ( _ )   
+          || ||
+          || ||
+          () ()
+          || ||
+          || ||
+         ==' '== 
+```
+Inspired from l42 work.
+
