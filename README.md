@@ -105,7 +105,7 @@ Usually, a simple ```pip install slugify netaddr``` should let use those plugins
 
 ## License
 
-Please read [GNU GENERAL PUBLIC LICENSE](LICENSE).
+Please read [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE).
 
 ## Credits
 There are a lot of goood ideas taken from the [enginyoyen ansible best practice repository](https://github.com/enginyoyen/ansible-best-practises/). The rest comes from some colleagues (Hi [Simon](https://github.com/spiette) !) and my customer experience.
